@@ -68,6 +68,7 @@ function processSubmit(event) {
     const email = document.getElementById("email").value.trim();
     const opinion = document.getElementById("opinion").value.trim();
     const improvements = document.getElementById("chooseInput").value.trim();
+    const url = document.getElementById("imgLinkInput").value.trim();
     const liked = checkRadioButtons();
 
     /*if(checkName() === false)
@@ -84,6 +85,7 @@ function processSubmit(event) {
             opinion: opinion,
             improvements: improvements,
             liked: liked,
+            url: url,
             created: new Date() // new Date(2018, 11, 24, 10, 33, 30, 0)
         };
 
