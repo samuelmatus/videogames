@@ -17,12 +17,12 @@ myFrmElm.addEventListener("submit", processSubmit);
 document.getElementById("clearBTN").onclick = clear;
 
 let email_id = document.getElementById("email");
-email_id.addEventListener("input", checkEmail);
+//email_id.addEventListener("input", checkEmail);
 
 let name_id = document.getElementById("name");
-name_id.addEventListener("input", checkName);
+//name_id.addEventListener("input", checkName);
 
-function checkEmail(){
+/*function checkEmail(){
     let email = email_id.value.trim();
 
     if(email === ""){
@@ -44,17 +44,9 @@ function checkName(){
         name_id.setCustomValidity("Enter your name");
         return false;
     }
-    if(name.length < 4){
-        name_id.setCustomValidity("Name is short");
-        return false;
-    }
-    if(name.length > 16){
-        name_id.setCustomValidity("Name is long");
-        return false;
-    }
 
     return true;
-}
+}*/
 
 function clear(event) {
     event.preventDefault();
@@ -78,18 +70,12 @@ function processSubmit(event) {
     const improvements = document.getElementById("chooseInput").value.trim();
     const liked = checkRadioButtons();
 
-    if(checkName() === false)
+    /*if(checkName() === false)
         return;
 
     if(checkEmail() === false)
-        return;
+        return;*/
 
-
-
-    /*if (name === "" || email === "") {
-        window.alert("Please, enter both your name and email");
-        return;
-    }*/
 
     const newOpinion =
         {
@@ -98,7 +84,7 @@ function processSubmit(event) {
             opinion: opinion,
             improvements: improvements,
             liked: liked,
-            created: new Date(2018, 11, 24, 10, 33, 30, 0) //new Date()
+            created: new Date() // new Date(2018, 11, 24, 10, 33, 30, 0)
         };
 
     console.log("New opinion:\n " + JSON.stringify(newOpinion));
