@@ -1,0 +1,307 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Samuel Matus" />
+    <meta name="google-signin-client_id" content="575467872819-srpukk1nir01r0vi670f19fisij2fli2.apps.googleusercontent.com">
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/styles.css"/>
+    <link rel="stylesheet"
+          href="css/treesBlog.css"
+          media="screen" />
+
+
+    <title>Video Games</title>
+   
+</head>
+
+<body>
+<header id="header">
+    <h1>My Blog about Video Games</h1>
+
+    <div class="menu"> 
+        <button id="menuTitle" onclick="displayOrHideMenu()">Menu</button>
+        <nav id="menuIts" class="menu mnHide">
+            <a href="#welcome">Welcome!</a>
+            <a href="#articles/1/0">Articles</a>
+            <a href="#opinions">Visitor opinions</a>
+            <a href="#addOpinion">Add your opinion</a>
+    </nav>
+    </div>
+
+    <aside id="googleSignIn">
+        <div id="SignInButton" data-onsucccess="onSignIn"></div>
+        <div id="SignedIn" class="hide">
+            Signed in as: <span id="userName"></span>
+            <button type="button" onclick="signOut()">Log Out</button>
+        </div>
+    </aside>
+    
+
+</header>
+
+<main id="router-view">
+</main>
+
+
+<footer  class="menuLink"><a href="#menuTitle" class='menuJump'>^Back to the menu^</a></footer>
+<footer>
+    Samuel Matus
+</footer>
+
+<!--Templates for html, dynamically inserted by the router -->
+
+<script id="template-welcome" type="text/template">
+    <article id="arWel">
+        <h2>Welcome!</h2>
+
+        <p>A video game is an electronic game that involves interaction with a user interface to
+                    generate visual feedback on a two- or three-dimensional video display device such as a touchscreen,
+                    virtual reality headset or monitor/TV set. Since the 1980s, video games have become an increasingly
+                    important part of the entertainment industry, and whether they are also a form of art is a matter of
+                    dispute.
+        </p>
+    </article>
+</script>
+
+<script id="template-articles" type="text/template">
+
+    {{#.}}
+    <div class="artHead">
+        <h3 >Articles</h3>
+        <a href={{link}} class="linkAsButton">Add article</a>
+    </div>
+    {{/.}}
+    
+    {{#articleList}}
+    <article id="artArt">
+        <h2><a href="{{detailLink}}">{{title}}</a></h2>    
+        <p>{{content}}</p>
+        <p>
+            by {{author}}
+        </p>
+    </article>
+    {{/articleList}}
+    {{#pages}}
+    <div id='navElement'>
+        <nav>
+            {{#previous}}
+                <a href="#articles/{{previous}}/{{previousOffset}}" id='backBtn'><< Previous page</a>
+            {{/previous}}
+            {{#next}}
+                <a href="#articles/{{next}}/{{nextOffset}}" id='nextBtn'>Next page >></a>
+            {{/next}}
+        </nav>
+        <p id='pageInfo'>
+            Displaying page {{current}} of {{pageCount}} pages.
+        </p>
+    </div>
+    {{/pages}}
+</script>
+
+
+<script id="template-articles-error" type="text/template">
+
+    <article id="artErr">
+        <h2>Articles acquisition failed</h2>
+        <p>
+            {{errMessage}}
+        </p>
+    </article>
+
+</script>
+
+<script id="template-opinions" type="text/template">
+    <article  id="artOpinions">
+        <h2>Visitor Opinions</h2>
+        {{#.}}
+        <section>
+            <h3>{{name}} <i>{{created}}</i></h3>
+            <p>{{opinion}}</p>
+            <p>I would improve {{improvements}}</p>
+        </section>
+        {{/.}}
+        {{^.}}
+        <section>
+            Sorry, no opinions found.
+        </section>
+        {{/.}}
+    </article>
+</script>
+
+<script id="template-addOpinion" type="text/template">
+    <article  id="artOpnFrm">
+        <h2>Your Opinion</h2>
+        <p>
+            Please, use the form below to state your opinion about this page.
+        </p>
+
+        <form id="formular" onsubmit="return processOpnFrmData(event)">
+            <h3>Your Opinion</h3>
+            <label for="name">Name (4 to 15 characters):</label>
+            <input type="text" id="name" name="name" required minlength="4" maxlength="15" size="10">
+            <label for="email">Enter your email:</label>
+            <input type="email" id="email" size="30">
+
+            <label for="yes">Did you like our page?</label>
+            <div id = "radio">
+                <input type="radio" name="YN" id="yes" value="yes"> yes
+                <input type="radio" name="YN" id="no" value="no"> no
+            </div>
+            
+
+            <label for="imgLinkInput">Url link:</label>
+            <input type="url" name="imgLink" id="imgLinkInput">
+
+
+            <label for="opinion">Tell us your opinion:</label>
+            <textarea id="opinion" name="opinion"
+                      rows="6" cols="33"></textarea>
+            <label for="chooseInput">Pick one thing you suggest to improve:</label>
+            <input list="choose" id="chooseInput" name="choose" size="10">
+            <datalist id="choose">
+                <option value="Design">
+                <option value="Content">
+                <option value="Employes">
+                <option value="Everything">
+                <option value="Nothing">
+            </datalist>
+            <span id="selected"></span>
+            <button type="submit">Send</button>
+        </form>
+    </article>
+</script>
+
+<script id="template-article" type="text/template">
+    <article>
+        <h3>{{title}}</h3>
+        <p>
+            by {{author}}
+        </p>
+        {{#imageLink}}
+        <figure>
+            <img src="{{imageLink}}" alt="article figure" />
+        </figure>
+        {{/imageLink}}
+        <div>{{{content}}}</div>
+        <p>
+            Keywords:
+            {{tags}}
+        </p>
+    </article>
+
+    <nav class='navElement'> 
+        <a href="{{backLink}}" class="linkAsButton"><< Back</a>
+        <a href="{{editLink}}" class="linkAsButton">Edit</a>
+        <a href="{{deleteLink}}" class="linkAsButton">Delete</a>
+    </nav>
+
+    <div class="commentsDiv">
+
+        <h3 class="comment">Comments</h3>
+        <button onclick="showCommentForm()"> Add comment</button>
+
+        <div class="hidden" id="commentForm">
+            <form id="addCommentForm" class="addComment">
+                
+            <label for="author">Author:</label>
+            <input required type="text" name="author" id="author" title="Comment author, max. length 100 characters." maxlength="100" placeholder="e.g. Ján Trieska"/>
+                    
+            <textarea name="text" id="text" spellcheck="true" rows="4" required minlength="10"
+                            title="Comment content, mandatory item, can be plain text or in HTML."></textarea>
+
+                    
+                <button class="secondary" type="submit">Odoslať</button>
+                 <button class="secondary" onclick="hideCommentForm()">Zrušiť</button>
+            
+            </form>
+        </div>
+
+        <div id="articleComments" class="commentsDiv"></div>
+    </div>
+
+</script>
+
+<script id="template-article-form" type="text/template">
+    <article>
+
+        <h2>{{formTitle}}</h2>
+        <br><br>
+
+        <form id="articleForm" onsubmit="return {{formSubmitCall}}">
+            <label for="author">Author:</label>
+            <input type="text" name="author" id="author" value="{{author}}" size="50" title="Article author, max. length 20 characters." maxlength="20" placeholder="e.g. Janko Hrasko" />
+            <br>
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" value="{{title}}" size="50"  maxlength="100" pattern="\S[\S\s]*" required title="Article title, mandatory item, max. length: 100 characters, the first character must not be a space." placeholder="e.g. My story." />
+            <br>
+            <label for="imageLink">Image (url):</label>
+            <input type="url" name="imageLink" id="imageLink" value="{{imageLink}}" size="50" title="Image URL, max. length 100 characters." maxlength="100"/>
+            <br>
+            <label></label><button type="button" id="btShowFileUpload" onclick="showFileUpload()">Upload image</button>
+
+            <fieldset class="added hiddenElm" id="fsetFileUpload">
+                <legend>Image Upload</legend>
+                <input type="file" id="flElm" name="file" accept="image/jpeg, image/png"/>
+                <br />
+                <button type="button" id="btFileUpload" onclick="uploadImg('{{urlBase}}')">Send image to server</button>
+                <button type="button" id="btCancelFileUpload" onclick="cancelFileUpload()">Cancel uploading</button>
+            </fieldset>
+
+
+            <br>
+            <label for="content">Article content:</label>
+            <textarea
+                    name="content" id="content" spellcheck="true" lang="sk"
+                    cols="50" rows="20" required
+                    title="Article content, mandatory item, can be plain text or in HTML.">{{content}}</textarea>
+            <br>
+            <label for="tags">Keywords:</label>
+            <input  type="text" name="tags" id="tags" value="{{tags}}" size="50"
+                    title="Keyword list, comma separated." placeholder="e.g. village, drama" />
+
+            <br>
+            <br>
+            <button type="reset">
+                RESET
+            </button>
+            <button type="submit">
+                {{submitBtTitle}}
+            </button>
+
+        </form>
+
+    </article>
+
+    <footer>
+        <a href="{{backLink}}" class="linkAsButton"><< Back</a>
+        <a href="#menuTitle" class="linkAsButton">Up to the menu</a>
+    </footer>
+</script>
+
+<script id="template-article-comment" type="text/template">
+    <section class="comment">
+        <h4>{{author}}</h4>
+        <div class="comment-text">{{{text}}}</div>
+        <span title="Updated: {{updated}}" class="info">{{created}}</span>
+    </section>
+</script>
+
+
+
+<script src="js/mustache.min.js"></script>
+
+<script src="js/mainMenu.js"></script>
+
+<script src="js/addOpinion.js"></script>
+
+<script src="js/handleArticleForms.js"></script>
+
+<script src="js/googleLogin.js"></script>
+
+<script src="https://apis.google.com/js/platform.js?onload=startGSingIn" async defer></script>
+
+<script type="module" src="js/routerInit.js"></script>
+
+</body>
+</html>
